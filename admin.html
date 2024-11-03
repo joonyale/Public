@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+</head>
+<body>
+    <h1>Order List</h1>
+    <div id="order-list"></div>
+    <button onclick="printOrders()">Print</button>
+
+    <script>
+        function printOrders() {
+            window.print();
+        }
+
+        fetch('/api/admin/orders')
+            .then(res => res.json())
+            .then(data => {
+                const orderList = document.getElementById('order-list');
+                data.orders.forEach(order => {
+                    const orderItem = document.createElement('div');
+                    orderItem.innerHTML = `
+                        <p>Figure ID: ${order.figureId}</p>
+                        <p>Name: ${order.customerName}</p>
+                        <p>Address: ${order.address}</p>
+                        <p>Contact: ${order.contact}</p>
+                        <p>Paid: ${order.paid ? 'Yes' : 'No'}</p>
+                    `;
+                    orderList.appendChild(orderItem);
+                });
+            });
+    </script>
+</body>
+</html>

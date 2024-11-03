@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figure Store</title>
+</head>
+<body>
+    <h1>Figure Gallery</h1>
+    <div id="figure-gallery"></div>
+    <button onclick="loadMoreFigures()">Load More</button>
+
+    <script>
+        let page = 1;
+        function loadMoreFigures() {
+            fetch(`/api/figures?page=${page}`)
+                .then(res => res.json())
+                .then(data => {
+                    const gallery = document.getElementById('figure-gallery');
+                    data.figures.forEach(figure => {
+                        const img = document.createElement('img');
+                        img.src = figure.imageUrl;
+                        img.alt = `Figure ${figure.id}`;
+                        img.onclick = () => addToCart(figure.id);
+                        gallery.appendChild(img);
+                    });
+                    page++;
+                });
+        }
+
+        function addToCart(figureId) {
+            fetch('/api/cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ figureId })
+            });
+        }
+    </script>
+</body>
+</html>
